@@ -1,4 +1,4 @@
-FastAdmin是一款基于ThinkPHP+Bootstrap的极速后台开发框架。
+FastAdmin是一款基于ThinkPHP5+Bootstrap的极速后台开发框架。
 
 
 ## 主要特性
@@ -34,34 +34,8 @@ FastAdmin是一款基于ThinkPHP+Bootstrap的极速后台开发框架。
 * 第三方支付(微信、支付宝)无缝整合，微信支持PC端扫码支付
 * 丰富的插件应用市场
 
-## 安装使用
-
-https://doc.fastadmin.net
-
-## 在线演示
-
-https://demo.fastadmin.net
-
-用户名：admin
-
-密　码：123456
-
-提　示：演示站数据无法进行修改，请下载源码安装体验全部功能
-
 ## 界面截图
 ![控制台](https://images.gitee.com/uploads/images/2020/0929/202947_8db2d281_10933.gif "控制台")
-
-## 问题反馈
-
-在使用中有任何问题，请使用以下联系方式联系我们
-
-交流社区: https://ask.fastadmin.net
-
-QQ群: [636393962](https://jq.qq.com/?_wv=1027&k=487PNBb)(满) [708784003](https://jq.qq.com/?_wv=1027&k=5ObjtwM)(满) [964776039](https://jq.qq.com/?_wv=1027&k=59qjU2P)(3群) [749803490](https://jq.qq.com/?_wv=1027&k=5tczi88)(满) [767103006](https://jq.qq.com/?_wv=1027&k=5Z1U751)(满) [675115483](https://jq.qq.com/?_wv=1027&k=54I6mts)(6群)
-
-Github: https://github.com/karsonzhang/fastadmin
-
-Gitee: https://gitee.com/karson/fastadmin
 
 ## 特别鸣谢
 
