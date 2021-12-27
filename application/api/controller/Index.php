@@ -20,4 +20,12 @@ class Index extends Api
     {
         $this->success('请求成功');
     }
+
+    public function test(){
+        $data = [
+            'name' => 'test',
+        ];
+
+        $this->success('success',$data);
+    }
 }

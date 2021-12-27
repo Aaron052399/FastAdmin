@@ -296,6 +296,6 @@ return [
         //版本号
         'version'               => '1.2.2.20211011_beta',
         //API接口地址
-        'api_url'               => 'https://api.fastadmin.net',
+        'api_url'               => 'api.fastadmin.com',
     ],
 ];
