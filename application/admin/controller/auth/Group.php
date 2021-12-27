@@ -55,9 +55,12 @@ class Group extends Backend
                 }
             }
         }
+
         $groupName = [];
         foreach ($groupList as $k => $v) {
-            $groupName[$v['id']] = $v['name'];
+            if($v['status'] != 'hidden'){
+                $groupName[$v['id']] = $v['name'];
+            }
         }
 
         $this->grouplist = $groupList;

@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\Admin;
-use app\admin\model\User;
+use app\admin\model\Users;
 use app\common\controller\Backend;
 use app\common\model\Attachment;
 use fast\Date;
@@ -31,14 +31,17 @@ class Dashboard extends Backend
         $column = [];
         $starttime = Date::unixtime('day', -6);
         $endtime = Date::unixtime('day', 0, 'end');
-        $joinlist = Db("user")->where('jointime', 'between time', [$starttime, $endtime])
+
+        $joinlist = Db("users")->where('jointime', 'between time', [$starttime, $endtime])
             ->field('jointime, status, COUNT(*) AS nums, DATE_FORMAT(FROM_UNIXTIME(jointime), "%Y-%m-%d") AS join_date')
             ->group('join_date')
             ->select();
+
         for ($time = $starttime; $time <= $endtime;) {
             $column[] = date("Y-m-d", $time);
             $time += 86400;
         }
+
         $userlist = array_fill_keys($column, 0);
         foreach ($joinlist as $k => $v) {
             $userlist[$v['join_date']] = $v['nums'];
@@ -46,16 +49,16 @@ class Dashboard extends Backend
 
         $dbTableList = Db::query("SHOW TABLE STATUS");
         $this->view->assign([
-            'totaluser'       => User::count(),
+            'totaluser'       => Users::count(),
             'totaladdon'      => count(get_addon_list()),
             'totaladmin'      => Admin::count(),
             'totalcategory'   => \app\common\model\Category::count(),
-            'todayusersignup' => User::whereTime('jointime', 'today')->count(),
-            'todayuserlogin'  => User::whereTime('logintime', 'today')->count(),
-            'sevendau'        => User::whereTime('jointime|logintime|prevtime', '-7 days')->count(),
-            'thirtydau'       => User::whereTime('jointime|logintime|prevtime', '-30 days')->count(),
-            'threednu'        => User::whereTime('jointime', '-3 days')->count(),
-            'sevendnu'        => User::whereTime('jointime', '-7 days')->count(),
+            'todayusersignup' => Users::whereTime('jointime', 'today')->count(),
+            'todayuserlogin'  => Users::whereTime('logintime', 'today')->count(),
+            'sevendau'        => Users::whereTime('jointime|logintime|prevtime', '-7 days')->count(),
+            'thirtydau'       => Users::whereTime('jointime|logintime|prevtime', '-30 days')->count(),
+            'threednu'        => Users::whereTime('jointime', '-3 days')->count(),
+            'sevendnu'        => Users::whereTime('jointime', '-7 days')->count(),
             'dbtablenums'     => count($dbTableList),
             'dbsize'          => array_sum(array_map(function ($item) {
                 return $item['Data_length'] + $item['Index_length'];

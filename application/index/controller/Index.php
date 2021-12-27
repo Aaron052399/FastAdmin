@@ -13,7 +13,9 @@ class Index extends Frontend
 
     public function index()
     {
-        return $this->view->fetch();
+        // 阻断跳转到前台页面，跳往后台登陆页面
+        return $this->redirect('/backend.php/index/login');
+//        return $this->view->fetch();
     }
 
 }

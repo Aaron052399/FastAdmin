@@ -12,6 +12,23 @@
 @import url("../libs/bootstrap-select/dist/css/bootstrap-select.min.css");
 @import url("../libs/fastadmin-selectpage/selectpage.css");
 @import url("../libs/bootstrap-slider/slider.css");
+
+.green_css,.green_css ~ td {
+  color: green!important;
+}
+.blue_css,.blue_css ~ td {
+  color: blue!important;
+}
+.red_css,.red_css ~ td {
+  color: red!important;
+}
+.black_css,.black_css ~ td {
+  color: black!important;
+}
+.orange_css,.orange_css ~ td {
+  color: darkorange!important;
+}
+
 html,
 body {
   height: 100%;

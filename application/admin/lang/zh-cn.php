@@ -216,4 +216,17 @@ return [
     'User Module'                                           => '会员模块',
     'Register'                                              => '注册',
     'User Center'                                           => '会员中心',
+
+    // 新增
+    'Sold out'                                              => '下架',
+    'No sold out were task'                                 => '没有下架任何任务',
+    'Are you sure you want to sold out the %s selected item?' => '确定下架选中的 %s 项?',
+    'Are you sure you want to sold out this item?'          => '确定下架次项?',
+    'Add task'                                              => '新增任务',
+    'TK task'                                               => '抖音任务',
+    'KS task'                                               => '快手任务',
+    'HY task'                                               => '虎牙任务',
+    'DY task'                                               => '斗鱼任务',
+    'Screen shot'                                           =>  '截图',
+    'Download screen shot'                                           =>  '下载截图',
 ];

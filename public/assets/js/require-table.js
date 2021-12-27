@@ -71,8 +71,11 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
             toolbar: '.toolbar',
             refreshbtn: '.btn-refresh',
             addbtn: '.btn-add',
+            addtaskbtn: '.btn-addtask',
             editbtn: '.btn-edit',
             delbtn: '.btn-del',
+            soldoutbtn: '.btn-soldout',
+            download: '.btn-download',
             importbtn: '.btn-import',
             multibtn: '.btn-multi',
             disabledbtn: '.btn-disabled',
@@ -97,6 +100,20 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 title: __('Del'),
                 extend: 'data-toggle="tooltip"',
                 classname: 'btn btn-xs btn-danger btn-delone'
+            },
+            soldout: {
+                name: 'del',
+                icon: 'fa fa-trash',
+                title: __('Sold out'),
+                extend: 'data-toggle="tooltip"',
+                classname: 'btn btn-xs btn-danger btn-delone'
+            },
+            download: {
+                name: 'download',
+                icon: 'fa fa-download',
+                title: __('Download screen shot'),
+                extend: 'data-toggle="tooltip"',
+                classname: 'btn btn-xs btn-info btn-download'
             },
             dragsort: {
                 name: 'dragsort',
@@ -319,6 +336,20 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     }
                     Fast.api.open(url, $(this).data("original-title") || $(this).attr("title") || __('Add'), $(this).data() || {});
                 });
+                // 添加任务事件
+                toolbar.on('click', Table.config.addtaskbtn, function () {
+                    var ids = Table.api.selectedids(table);
+                    var url = options.extend.add_url;
+
+                    if (url.indexOf("{ids}") !== -1) {
+                        url = Table.api.replaceurl(url, {ids: ids.length > 0 ? ids.join(",") : 0}, table);
+                    }
+
+                    // 拼接任务类型
+                    url = url + '?task_type=' + $(this).data('taks_type');
+
+                    Fast.api.open(url, $(this).data("original-title") || $(this).attr("title") || __('Add task'), $(this).data() || {});
+                });
                 // 导入按钮事件
                 if ($(Table.config.importbtn, toolbar).size() > 0) {
                     require(['upload'], function (Upload) {
@@ -404,6 +435,19 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     var ids = Table.api.selectedids(table);
                     Layer.confirm(
                         __('Are you sure you want to delete the %s selected item?', ids.length),
+                        {icon: 3, title: __('Warning'), offset: 0, shadeClose: true, btn: [__('OK'), __('Cancel')]},
+                        function (index) {
+                            Table.api.multi("del", ids, table, that);
+                            Layer.close(index);
+                        }
+                    );
+                });
+                // 批量下架按钮事件
+                toolbar.on('click', Table.config.soldoutbtn, function () {
+                    var that = this;
+                    var ids = Table.api.selectedids(table);
+                    Layer.confirm(
+                        __('Are you sure you want to sold out the %s selected item?', ids.length),
                         {icon: 3, title: __('Warning'), offset: 0, shadeClose: true, btn: [__('OK'), __('Cancel')]},
                         function (index) {
                             Table.api.multi("del", ids, table, that);
@@ -604,7 +648,15 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                                 Layer.close(index);
                             }
                         );
-                    }
+                    },
+                    'click .btn-download': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        window.open('http://api.morsx.cn:8043/download_ss/?name=task_' + ids);
+                    },
                 },//单元格图片预览
                 image: {
                     'click .img-center': function (e, value, row, index) {
@@ -807,11 +859,100 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 }
                 ,
+                operateMore: function (value, row, index) {
+                    var table = this.table;
+                    // 操作配置
+                    var options = table ? table.bootstrapTable('getOptions') : {};
+                    // 默认按钮组
+                    var buttons = $.extend([], this.buttons || []);
+                    // 所有按钮名称
+                    var names = [];
+                    buttons.forEach(function (item) {
+                        names.push(item.name);
+                    });
+                    if (options.extend.edit_url !== '' && names.indexOf('edit') === -1) {
+                        Table.button.edit.url = options.extend.edit_url;
+                        buttons.push(Table.button.edit);
+                    }
+                    if (options.extend.del_url !== '' && names.indexOf('del') === -1) {
+                        buttons.push(Table.button.del);
+                    }
+                    if (options.extend.download_url !== '' && names.indexOf('download') === -1) {
+                        buttons.push(Table.button.download);
+                    }
+                    return Table.api.buttonlinks(this, buttons, value, row, index, 'operate');
+                }
+                ,
                 buttons: function (value, row, index) {
                     // 默认按钮组
                     var buttons = $.extend([], this.buttons || []);
                     return Table.api.buttonlink(this, buttons, value, row, index, 'buttons');
                 }
+            },
+            buttonlinks: function (column, buttons, value, row, index, type) {
+                var table = column.table;
+                column.clickToSelect = false;
+                type = typeof type === 'undefined' ? 'buttons' : type;
+                var options = table ? table.bootstrapTable('getOptions') : {};
+                var html = [];
+                var hidden, visible, disable, url, classname, icon, text, title, refresh, confirm, extend,
+                    dropdown, link;
+                var fieldIndex = column.fieldIndex;
+                var dropdowns = {};
+
+                $.each(buttons, function (i, j) {
+                    if (type === 'operate') {
+                        if (j.name === 'dragsort' && typeof row[Table.config.dragsortfield] === 'undefined') {
+                            return true;
+                        }
+                        if (['add', 'edit', 'del', 'multi', 'dragsort','download'].indexOf(j.name) > -1 && !options.extend[j.name + "_url"]) {
+                            return true;
+                        }
+                    }
+                    var attr = table.data(type + "-" + j.name);
+                    if (typeof attr === 'undefined' || attr) {
+                        hidden = typeof j.hidden === 'function' ? j.hidden.call(table, row, j) : (typeof j.hidden !== 'undefined' ? j.hidden : false);
+                        if (hidden) {
+                            return true;
+                        }
+                        visible = typeof j.visible === 'function' ? j.visible.call(table, row, j) : (typeof j.visible !== 'undefined' ? j.visible : true);
+                        if (!visible) {
+                            return true;
+                        }
+                        dropdown = j.dropdown ? j.dropdown : '';
+                        url = j.url ? j.url : '';
+                        url = typeof url === 'function' ? url.call(table, row, j) : (url ? Fast.api.fixurl(Table.api.replaceurl(url, row, table)) : 'javascript:;');
+                        classname = j.classname ? j.classname : 'btn-primary btn-' + name + 'one';
+                        icon = j.icon ? j.icon : '';
+                        text = typeof j.text === 'function' ? j.text.call(table, row, j) : j.text ? j.text : '';
+                        title = typeof j.title === 'function' ? j.title.call(table, row, j) : j.title ? j.title : text;
+                        refresh = j.refresh ? 'data-refresh="' + j.refresh + '"' : '';
+                        confirm = typeof j.confirm === 'function' ? j.confirm.call(table, row, j) : (typeof j.confirm !== 'undefined' ? j.confirm : false);
+                        confirm = confirm ? 'data-confirm="' + confirm + '"' : '';
+                        extend = j.extend ? j.extend : '';
+                        disable = typeof j.disable === 'function' ? j.disable.call(table, row, j) : (typeof j.disable !== 'undefined' ? j.disable : false);
+                        if (disable) {
+                            classname = classname + ' disabled';
+                        }
+                        link = '<a href="' + url + '" class="' + classname + '" ' + (confirm ? confirm + ' ' : '') + (refresh ? refresh + ' ' : '') + extend + ' title="' + title + '" data-table-id="' + (table ? table.attr("id") : '') + '" data-field-index="' + fieldIndex + '" data-row-index="' + index + '" data-button-index="' + i + '"><i class="' + icon + '"></i>' + (text ? ' ' + text : '') + '</a>';
+                        if (!dropdown) {
+                            if (typeof dropdowns[dropdown] == 'undefined') {
+                                dropdowns[dropdown] = [];
+                            }
+                            dropdowns[dropdown].push(link);
+                        } else {
+                            html.push(link);
+                        }
+                    }
+                });
+                if (!$.isEmptyObject(dropdowns)) {
+                    var dropdownHtml = [];
+                    $.each(dropdowns, function (i, j) {
+                        dropdownHtml.push('<div class="btn-group"><button type="button" class="btn btn-light dropdown-toggle btn-xs" data-toggle="dropdown">更多 <span class="caret"></span></button><ul class="dropdown-menu dropdown-menu-right"><li>' + j.join('</li><li>') + '</li></ul></div>');
+                    });
+                    html.unshift(dropdownHtml);
+                }
+                return html.join(' ');
             },
             buttonlink: function (column, buttons, value, row, index, type) {
                 var table = column.table;

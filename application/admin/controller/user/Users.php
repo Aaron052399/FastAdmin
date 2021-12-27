@@ -10,21 +10,21 @@ use app\common\library\Auth;
  *
  * @icon fa fa-user
  */
-class User extends Backend
+class Users extends Backend
 {
 
     protected $relationSearch = true;
     protected $searchFields = 'id,username,nickname';
 
     /**
-     * @var \app\admin\model\User
+     * @var \app\admin\model\Users
      */
     protected $model = null;
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = model('User');
+        $this->model = model('Users');
     }
 
     /**
@@ -34,6 +34,7 @@ class User extends Backend
     {
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
+
         if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {

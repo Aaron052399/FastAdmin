@@ -4,7 +4,7 @@ return array (
   'name' => '测试后台管理',
   'beian' => '',
   'cdnurl' => '',
-  'version' => '1.0.2',
+  'version' => '1.0.15',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
