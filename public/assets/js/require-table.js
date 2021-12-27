@@ -92,28 +92,32 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 icon: 'fa fa-pencil',
                 title: __('Edit'),
                 extend: 'data-toggle="tooltip"',
-                classname: 'btn btn-xs btn-success btn-editone'
+                classname: 'btn btn-xs btn-success btn-editone',
+                text: __('Edit'),
             },
             del: {
                 name: 'del',
                 icon: 'fa fa-trash',
                 title: __('Del'),
                 extend: 'data-toggle="tooltip"',
-                classname: 'btn btn-xs btn-danger btn-delone'
+                classname: 'btn btn-xs btn-danger btn-delone',
+                text: __('Del'),
             },
             soldout: {
                 name: 'del',
                 icon: 'fa fa-trash',
                 title: __('Sold out'),
                 extend: 'data-toggle="tooltip"',
-                classname: 'btn btn-xs btn-danger btn-delone'
+                classname: 'btn btn-xs btn-danger btn-delone',
+                text: __('Sold out'),
             },
             download: {
                 name: 'download',
                 icon: 'fa fa-download',
                 title: __('Download screen shot'),
                 extend: 'data-toggle="tooltip"',
-                classname: 'btn btn-xs btn-info btn-download'
+                classname: 'btn btn-xs btn-info btn-download',
+                text: __('Download screen shot'),
             },
             dragsort: {
                 name: 'dragsort',
@@ -874,8 +878,11 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         Table.button.edit.url = options.extend.edit_url;
                         buttons.push(Table.button.edit);
                     }
+                    // if (options.extend.del_url !== '' && names.indexOf('del') === -1) {
+                    //     buttons.push(Table.button.del);
+                    // }
                     if (options.extend.del_url !== '' && names.indexOf('del') === -1) {
-                        buttons.push(Table.button.del);
+                        buttons.push(Table.button.soldout);
                     }
                     if (options.extend.download_url !== '' && names.indexOf('download') === -1) {
                         buttons.push(Table.button.download);
@@ -905,7 +912,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         if (j.name === 'dragsort' && typeof row[Table.config.dragsortfield] === 'undefined') {
                             return true;
                         }
-                        if (['add', 'edit', 'del', 'multi', 'dragsort','download'].indexOf(j.name) > -1 && !options.extend[j.name + "_url"]) {
+                        if (['add', 'edit', 'del', 'multi', 'dragsort','download','soldout'].indexOf(j.name) > -1 && !options.extend[j.name + "_url"]) {
                             return true;
                         }
                     }
