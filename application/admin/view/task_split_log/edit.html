@@ -1,0 +1,46 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Task_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-task_id" data-rule="required" data-source="task/index" class="form-control selectpage" name="row[task_id]" type="text" value="{$row.task_id|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Order_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-order_id" data-rule="required" data-source="order/index" class="form-control selectpage" name="row[order_id]" type="text" value="{$row.order_id|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Ordercode')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-ordercode" class="form-control " rows="5" name="row[ordercode]" cols="50">{$row.ordercode|htmlentities}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Taskcode')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-taskcode" class="form-control " rows="5" name="row[taskcode]" cols="50">{$row.taskcode|htmlentities}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-status" class="form-control" name="row[status]" type="number" value="{$row.status|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Is_inform')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-is_inform" class="form-control" name="row[is_inform]" type="number" value="{$row.is_inform|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

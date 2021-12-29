@@ -227,6 +227,8 @@ return [
     'KS task'                                               => '快手任务',
     'HY task'                                               => '虎牙任务',
     'DY task'                                               => '斗鱼任务',
-    'Screen shot'                                           =>  '截图',
-    'Download screen shot'                                           =>  '下载截图',
+    'Screen shot'                                           => '截图',
+    'Download screen shot'                                  => '下载截图',
+    'Wrong request mode'                                    => '错误的请求方式',
+    'Comment file verification error'                        => '评论文件校验错误',
 ];
