@@ -7,16 +7,14 @@ use think\Db;
 use think\exception\PDOException;
 use think\exception\ValidateException;
 
-/**
- * 示例接口
- */
 class Api extends Backend
 {
     /**
      * Task模型对象
      * @var \app\admin\model\Task
      */
-    protected $model = null;
+    protected $task_model = null;
+    protected $task_split_log = null;
 
     protected $public_key = '39Cd8eJe7vggnikR';
 
@@ -57,9 +55,10 @@ class Api extends Backend
     public function addTask()
     {
         if ($this->request->isPost()) {
-            $params = $this->request->post("data/a");
+            $params = $this->request->param();
 
             // 验证Token是否正确
+            if (!isset($params['token'])) $this->returnError(__('Token verification error!'));
             if ($params['token'] != md5($this->public_key . $params['request_time'])) {
                 $this->returnError(__('Token verification error'));
             }
@@ -69,8 +68,12 @@ class Api extends Backend
 
                 $order_code = json_decode($params['ordercode'], true);
 
-                $res = $this->downFile($order_code['comment_file']);
-                if (!$res) $this->returnError(__('Comment file verification error'));
+                // 判断文件地址是否存在
+                if (!empty($order_code['comment_file'])){
+                    // 将文件下载到本地，并返回是否成功
+                    $res = $this->downFile($order_code['comment_file']);
+                    if (!$res) $this->returnError(__('Comment file verification error'));
+                }
 
                 $task_name_arr = explode('.', $order_code['operate']);
                 $params['busitype'] = 1;
@@ -81,6 +84,7 @@ class Api extends Backend
                 $params['taskname'] = $order_code['operate'];
                 $params['tasktype'] = strtoupper($task_name_arr[0]);
                 $params['amount'] = $order_code['manually_comment_cnt'];
+                $params['comment_file'] = $res;
 
                 $task_code[] = [
                     'follow_mintime' => $order_code['follow_mintime'],
@@ -123,10 +127,8 @@ class Api extends Backend
                                 'status' => 1,
                                 'updatetime' => time(),
                                 'createtime' => time(),
-                                'is_inform' => 1,
+                                'is_inform' => 0,
                             ];
-                            var_dump($data);
-                            exit;
                             $result = $this->task_split_log->allowField(true)->save($data);
                         } catch (ValidateException $e) {
                             Db::rollback();
@@ -158,7 +160,7 @@ class Api extends Backend
             }
             $this->returnError(__('Parameter %s can not be empty', ''));
         } else {
-            return $this->returnError(__('Wrong request mode'));
+            $this->returnError(__('Wrong request mode'));
         }
     }
 
@@ -190,7 +192,10 @@ class Api extends Backend
         //文件名
         $arr = array();
         if (preg_match('/filename=(.*)/', $header, $arr)) {
-            $file = date('Ym') . '/' . date('d') . '/' . trim($arr[1]);
+            $file_name_arr = explode('.',$arr[1]);
+            $file_name_arr[0] = $file_name_arr[0] . '_' . uniqid();
+            $file_name = trim(implode('.',$file_name_arr));
+            $file = date('Ym') . '/' . date('d') . '/' . $file_name;
             $fullName = rtrim($savePath, '/') . '/' . $file;
             //创建目录并设置权限
             $basePath = dirname($fullName);
@@ -198,8 +203,11 @@ class Api extends Backend
                 @mkdir($basePath, 0777, true);
                 @chmod($basePath, 0777);
             }
+
             if (file_put_contents($fullName, $body)) {
-                return true;
+                $fullName = explode('/',$fullName);
+                unset($fullName[0]);
+                return implode('/',$fullName);
             }
         }
         return false;
