@@ -25,11 +25,17 @@ class Task extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        $output->writeln('');
-        $output->writeln(date('Y-m-d H:i:s') . ' Crontab job start...');
-        $this->taskStatus();
-        $output->writeln(date('Y-m-d H:i:s') . ' Crontab job end...');
-        $output->writeln('');
+        set_time_limit(0);
+
+        while (true) {
+            $output->writeln('');
+            $output->writeln(date('Y-m-d H:i:s') . ' Crontab job start...');
+            $this->taskStatus();
+            $output->writeln(date('Y-m-d H:i:s') . ' Crontab job end...');
+            $output->writeln('');
+            sleep(5);
+        }
+
     }
 
     private function taskStatus()
@@ -83,7 +89,7 @@ class Task extends Command
                 // 实例化Curl工具类
                 $Curl = new Curl();
                 // 发送POST请求
-                $res = json_decode($Curl->post('http://www.fastadmin.com/api/addTask', json_encode($task_info_arr)), true);
+                $res = json_decode($Curl->post('http://api.morsx.cn:8888/api/addTask', json_encode($task_info_arr)), true);
                 echo "\n";
                 // 判断是否有数据
                 if ($res['code'] == 1 && count($res['data']) > 0) {
