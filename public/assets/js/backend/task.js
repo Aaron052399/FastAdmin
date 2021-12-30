@@ -11,7 +11,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     del_url: 'task/del',
                     multi_url: 'task/multi',
                     import_url: 'task/import',
-                    download_url: 'task/import',
+                    download_url: 'task/download',
                     table: 'task',
                 }
             });
