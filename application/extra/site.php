@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'name' => '测试后台管理',
+  'name' => '任务管理后台',
   'beian' => '',
   'cdnurl' => '',
   'version' => '1.0.18',
