@@ -1,4 +1,4 @@
-define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
+define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function ($, undefined, Backend, Table, Form, Template) {
 
     var Controller = {
         index: function () {
@@ -9,6 +9,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     add_url: 'task/add',
                     edit_url: 'task/edit',
                     del_url: 'task/del',
+                    livepublish_url: 'task/livepublish',
                     multi_url: 'task/multi',
                     import_url: 'task/import',
                     download_url: 'task/download',
@@ -128,13 +129,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         add: function () {
             Controller.api.bindevent();
+            $(document).on("change", "#c-taskname", function () {
+                //变更后的回调事件
+                if ($(this).val().split('.')[1] === 'vlog') {
+                    $('.delay').css({'display': 'block'});
+                } else {
+                    $('.delay').css({'display': 'none'});
+                }
+            });
         },
         edit: function () {
             Controller.api.bindevent();
         },
+        livepublish: function () {
+            $('.clear-task').on('click', function () {
+                var operation_type = $(this).data('operation_type');
+                $.ajax({
+                    url: "/inlive/get_inlive_publish_url",
+                    type: "POST",
+                    data: {
+                        'operation_type': operation_type,
+                    },
+                    success: function (data) {
+                        window.open(data['url'])
+                    }
+                })
+            });
+        },
         api: {
             bindevent: function () {
-                Form.api.bindevent($("form[role=form]"));
+                Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                    $('.layer-footer').css({'display':'none'});
+                    console.log($('.layer-footer'));
+                    top.Toastr.success(ret.msg);
+                    parent.$(".btn-refresh").trigger("click");
+                    window.location.href = '/task/detail?task_id=' + data + '&type=' + ret.url;
+                    return false;
+                });
             }
         }
     };

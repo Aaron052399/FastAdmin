@@ -1,0 +1,96 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Masterid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-masterid" class="form-control" name="row[masterid]" type="number" value="{$row.masterid|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Taskname')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-taskname" data-rule="required" class="form-control" name="row[taskname]" type="text" value="{$row.taskname|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Taskcode')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-taskcode" class="form-control " rows="5" name="row[taskcode]" cols="50">{$row.taskcode|htmlentities}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Tasktype')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-tasktype" data-rule="required" class="form-control" name="row[tasktype]" type="text" value="{$row.tasktype|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-status" class="form-control" name="row[status]" type="number" value="{$row.status|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Pubtime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-pubtime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[pubtime]" type="text" value="{:$row.pubtime?datetime($row.pubtime):''}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Endtime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-endtime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[endtime]" type="text" value="{:$row.endtime?datetime($row.endtime):''}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Reward')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-reward" data-rule="required" class="form-control" name="row[reward]" type="number" value="{$row.reward|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Amount')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-amount" data-rule="required" class="form-control" name="row[amount]" type="number" value="{$row.amount|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Published_amount')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-published_amount" class="form-control" name="row[published_amount]" type="number" value="{$row.published_amount|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Finished_amount')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-finished_amount" class="form-control" name="row[finished_amount]" type="number" value="{$row.finished_amount|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Comment_file')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-comment_file" class="form-control" size="50" name="row[comment_file]" type="text" value="{$row.comment_file|htmlentities}">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="faupload-comment_file" class="btn btn-danger faupload" data-input-id="c-comment_file" data-multiple="false" data-preview-id="p-comment_file"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    <span><button type="button" id="fachoose-comment_file" class="btn btn-primary fachoose" data-input-id="c-comment_file" data-multiple="false"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-comment_file"></span>
+            </div>
+            <ul class="row list-inline faupload-preview" id="p-comment_file"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Busitype')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-busitype" class="form-control" name="row[busitype]" type="number" value="{$row.busitype|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

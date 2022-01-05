@@ -171,6 +171,25 @@
             <div class="tab-pane fade active in" id="one">
 
                 <div class="row">
+                    z
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="sm-st clearfix">
+                            <span class="sm-st-icon st-violet"><i class="fa fa-magic"></i></span>
+                            <div class="sm-st-info">
+                                <span>{$totaladdon}</span>
+                                {:__('Total addon')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="sm-st clearfix">
+                            <span class="sm-st-icon st-blue"><i class="fa fa-leaf"></i></span>
+                            <div class="sm-st-info">
+                                <span>{$totalcategory}</span>
+                                {:__('Total category')}
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-sm-3 col-xs-6">
                         <div class="sm-st clearfix">
                             <span class="sm-st-icon st-green"><i class="fa fa-user"></i></span>
@@ -184,12 +203,72 @@
 
                 <div class="row">
                     <div class="col-lg-8">
+                        <div id="echart" class="btn-refresh" style="height:200px;width:100%;"></div>
                     </div>
                     <div class="col-lg-4">
                         <div class="card sameheight-item stats">
                             <div class="card-block">
                                 <div class="row row-sm stats-container">
-
+                                    <div class="col-xs-6 stat-col">
+                                        <div class="stat-icon"><i class="fa fa-rocket"></i></div>
+                                        <div class="stat">
+                                            <div class="value"> {$todayusersignup}</div>
+                                            <div class="name"> {:__('Today user signup')}</div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-success" style="width: 30%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 stat-col">
+                                        <div class="stat-icon"><i class="fa fa-vcard"></i></div>
+                                        <div class="stat">
+                                            <div class="value"> {$todayuserlogin}</div>
+                                            <div class="name"> {:__('Today user login')}</div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon"><i class="fa fa-calendar"></i></div>
+                                        <div class="stat">
+                                            <div class="value"> {$threednu}</div>
+                                            <div class="name"> {:__('Three dnu')}</div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 stat-col">
+                                        <div class="stat-icon"><i class="fa fa-calendar-plus-o"></i></div>
+                                        <div class="stat">
+                                            <div class="value"> {$sevendnu}</div>
+                                            <div class="name"> {:__('Seven dnu')}</div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon"><i class="fa fa-user-circle"></i></div>
+                                        <div class="stat">
+                                            <div class="value"> {$sevendau}</div>
+                                            <div class="name"> {:__('Seven dau')}</div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6  stat-col">
+                                        <div class="stat-icon"><i class="fa fa-user-circle-o"></i></div>
+                                        <div class="stat">
+                                            <div class="value"> {$thirtydau}</div>
+                                            <div class="name"> {:__('Thirty dau')}</div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

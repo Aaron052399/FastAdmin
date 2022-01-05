@@ -16,4 +16,5 @@ return [
     'Finished_amount'  => '已完成数量',
     'Comment_file'     => '评论文件',
     'Busitype'         => '业务类型',
+    'Is order'         => '是否订单任务',
 ];

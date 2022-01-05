@@ -1,79 +1,115 @@
 <form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
-
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Masterid')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-masterid" class="form-control" name="row[masterid]" type="number" value="0">
+        <label class="control-label col-xs-12 col-sm-3">{:__('Tasktype')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <select name="row[tasktype]" id="c-tasktype" class="form-control">
+                <option value="{$task_type}">{$task_type_name}</option>
+            </select>
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Taskname')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-taskname" data-rule="required" class="form-control" name="row[taskname]" type="text" value="">
+        <label class="control-label col-xs-12 col-sm-3">{:__('Taskname')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <select name="row[taskname]" id="c-taskname" data-rule="required" class="form-control" title="请选择操作类型">
+                <option value="">请选择操作类型</option>
+                {volist name="task_name" id="vo"}
+                <option value="{$vo['type']}">{$vo['name']}</option>
+                {/volist}
+            </select>
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Taskcode')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <textarea id="c-taskcode" class="form-control " rows="5" name="row[taskcode]" cols="50"></textarea>
+        <label class="control-label col-xs-12 col-sm-3">{:__('Is order')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <select name="row[busitype]" id="c-busitype" data-rule="required" class="form-control" title="请选择">
+                <option value="">请选择</option>
+                <option value="0">普通</option>
+                <option value="1">订单</option>
+            </select>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3">{:__('直播间搜索串')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-search_key" data-rule="required" class="form-control" name="row[taskcode][search_key]" type="text" placeholder="直播间搜索串">
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Tasktype')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-tasktype" data-rule="required" class="form-control" name="row[tasktype]" type="text" value="">
+        <label class="control-label col-xs-12 col-sm-3">{:__('用户昵称')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-search_nickname" data-rule="required" class="form-control" name="row[taskcode][search_nickname]" type="text" placeholder="用户昵称">
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-status" class="form-control" name="row[status]" type="number">
+        <label class="control-label col-xs-12 col-sm-3">{:__('用户主页')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-search_homepage" data-rule="required" class="form-control" name="row[taskcode][search_homepage]" type="text" placeholder="用户主页">
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Pubtime')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-pubtime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[pubtime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        <label class="control-label col-xs-12 col-sm-3">{:__('校验串')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-verify_key" data-rule="required" class="form-control" name="row[taskcode][verify_key]" type="text" placeholder="校验串">
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Endtime')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-endtime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[endtime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        <label class="control-label col-xs-12 col-sm-3">{:__('最早关注（分钟）')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-follow_mintime" class="form-control" name="row[taskcode][follow_mintime]" type="number" value="1">
         </div>
+        <p style="color:red">仅在直播间生效</p>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Reward')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-reward" data-rule="required" class="form-control" name="row[reward]" type="number" value="0">
+        <label class="control-label col-xs-12 col-sm-3">{:__('最晚关注（分钟）')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-follow_maxtime" class="form-control" name="row[taskcode][follow_maxtime]" type="number" value="1">
         </div>
+        <p style="color:red">仅在直播间生效</p>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Amount')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-amount" data-rule="required" class="form-control" name="row[amount]" type="number" value="0">
+        <label class="control-label col-xs-12 col-sm-3">{:__('关注数量')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-manually_follow_cnt" class="form-control" name="row[taskcode][manually_follow_cnt]" type="number" value="1">
         </div>
+        <p style="color:red">关注总数</p>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Published_amount')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-published_amount" class="form-control" name="row[published_amount]" type="number" value="0">
+        <label class="control-label col-xs-12 col-sm-3">{:__('点赞数量')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-manually_praise_cnt" class="form-control" name="row[taskcode][manually_praise_cnt]" type="number" value="1">
         </div>
+        <p style="color:red">每小时点赞总数</p>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Finished_amount')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-finished_amount" class="form-control" name="row[finished_amount]" type="number" value="0">
+        <label class="control-label col-xs-12 col-sm-3">{:__('评论数量')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-manually_comment_cnt" class="form-control" name="row[taskcode][manually_comment_cnt]" type="number" value="1">
         </div>
+        <p style="color:red">每小时评论总数</p>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Comment_file')}:</label>
-        <div class="col-xs-12 col-sm-8">
+        <label class="control-label col-xs-12 col-sm-3">{:__('购物车数量')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-manually_cart_cnt" class="form-control" name="row[taskcode][manually_cart_cnt]" type="number" value="1">
+        </div>
+        <p style="color:red">每小时进购物车总次数</p>
+    </div>
+    <div class="form-group delay" style="display: none">
+        <label class="control-label col-xs-12 col-sm-3">{:__('延迟')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-delay" class="form-control" name="row[taskcode][delay]" type="number" value="0">
+        </div>
+        <p style="color:red">/分钟</p>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3">{:__('Comment_file')}:</label>
+        <div class="col-xs-12 col-sm-7">
             <div class="input-group">
                 <input id="c-comment_file" class="form-control" size="50" name="row[comment_file]" type="text">
                 <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="faupload-comment_file" class="btn btn-danger faupload" data-input-id="c-comment_file" data-multiple="false" data-preview-id="p-comment_file"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-comment_file" class="btn btn-primary fachoose" data-input-id="c-comment_file" data-multiple="false"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                    <span><button type="button" id="faupload-comment_file" class="btn btn-danger faupload" data-url="ajax/uploadCommentFile" data-input-id="c-comment_file" data-multiple="false" data-mimetype="txt" data-preview-id="p-comment_file"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
                 </div>
                 <span class="msg-box n-right" for="c-comment_file"></span>
             </div>
@@ -81,14 +117,41 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Busitype')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-busitype" class="form-control" name="row[busitype]" type="number" value="0">
+        <label class="control-label col-xs-12 col-sm-3">{:__('Pubtime')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-pubtime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[pubtime]" type="text" value="{:date('Y-m-d H:i:s')}">
         </div>
     </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3">{:__('Endtime')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-endtime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[endtime]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3">{:__('Reward')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-reward" class="form-control" name="row[reward]" type="number" value="0">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3">{:__('任务数量')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-manually_amount" class="form-control" name="row[taskcode][manually_amount]" type="number" value="1">
+        </div>
+        <p style="color:red">任务原始数量</p>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3">{:__('任务倍数')}:</label>
+        <div class="col-xs-12 col-sm-7">
+            <input id="c-amount_multi" class="form-control" name="row[taskcode][amount_multi]" type="number" value="1.5">
+        </div>
+        <p style="color:red">任务数量倍数</p>
+    </div>
+
     <div class="form-group layer-footer">
-        <label class="control-label col-xs-12 col-sm-2"></label>
-        <div class="col-xs-12 col-sm-8">
+        <label class="control-label col-xs-12 col-sm-3"></label>
+        <div class="col-xs-12 col-sm-7">
             <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
             <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
         </div>

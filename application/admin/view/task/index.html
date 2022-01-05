@@ -30,10 +30,11 @@
 
 
                     </div>
-                    <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
+                    <table id="table" class="table table-striped table-bordered table-hover table-nowrap" data-page-list="[10,20,30,50]"
                            data-operate-edit="{:$auth->check('task/edit')}"
                            data-operate-del="{:$auth->check('task/del')}"
                            data-operate-download="{:$auth->check('task/download')}"
+                           data-operate-livepublish="{:$auth->check('task/livepublish')}"
                            width="100%">
                     </table>
                 </div>

@@ -20,20 +20,7 @@ class Task extends Backend
      */
     protected $model = null;
 
-    //  `taskname` varchar(64) NOT NULL DEFAULT '' COMMENT '任务名称',
-    //  `taskcode` text COMMENT '任务执行串',
-    //  `tasktype` varchar(64) NOT NULL DEFAULT '' COMMENT '任务类型',
-    //  `status` tinyint(3) DEFAULT NULL COMMENT '任务状态 1-待发布 2-空闲',
-    //  `updatetime` int(11) DEFAULT NULL COMMENT '更新时间',
-    //  `pubtime` int(11) DEFAULT NULL COMMENT '发布时间',
-    //  `endtime` int(11) DEFAULT NULL COMMENT '结束时间',
-    //  `reward` int(11) NOT NULL DEFAULT '0' COMMENT '单价：香蕉',
-    //  `amount` int(11) NOT NULL DEFAULT '0' COMMENT '发布数量',
-    //  `published_amount` int(11) DEFAULT '0' COMMENT '已发布数量',
-    //  `finished_amount` int(11) DEFAULT '0' COMMENT '已完成数量',
-    //  `comment_file` varchar(1024) DEFAULT NULL COMMENT '评论文件',
-    //  `busitype` tinyint(3) DEFAULT '0' COMMENT '0-补贴 1-订单',
-    protected $tast_field_arr = [
+    protected $task_field_arr = [
         'tk' => [
             [
                 'field_name' => 'tasktype',
@@ -64,6 +51,56 @@ class Task extends Backend
         ],
         'dy' => [
 
+        ],
+    ];
+
+    protected $task_type_name = [
+        'tk' => '抖音',
+        'ks' => '快手',
+        'hy' => '虎牙',
+        'dy' => '斗鱼',
+    ];
+
+    protected $task_operatea_name = [
+        'tk' => [
+            [
+                'name' => '抖音直播任务',
+                'type' => 'tk.live.enter',
+            ],
+            [
+                'name' => '抖音视频任务',
+                'type' => 'tk.vlog.enter',
+            ],
+        ],
+        'ks' => [
+            [
+                'name' => '快手直播任务',
+                'type' => 'ks.live.enter',
+            ],
+//            [
+//                'name' => '快手视频任务',
+//                'type' => 'ks.vlog.enter',
+//            ],
+        ],
+        'hy' => [
+            [
+                'name' => '虎牙直播任务',
+                'type' => 'hy.live.enter',
+            ],
+//            [
+//                'name' => '虎牙视频任务',
+//                'type' => 'hy.vlog.enter',
+//            ],
+        ],
+        'dy' => [
+            [
+                'name' => '斗鱼直播任务',
+                'type' => 'dy.live.enter',
+            ],
+//            [
+//                'name' => '斗鱼视频任务',
+//                'type' => 'dy.vlog.enter',
+//            ],
         ],
     ];
 
@@ -155,6 +192,7 @@ class Task extends Backend
      */
     public function add()
     {
+        $task_type = $this->request->get('task_type');
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
@@ -163,6 +201,23 @@ class Task extends Backend
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
                 }
+
+                // 处理taskcode字段
+                $taskcode = $params['taskcode'];
+                $taskcode['comment_content'] = '[NONSENSE]';
+                $taskcode['ss_policy'] = 'default';
+                $taskcode['operate'] = $params['taskname'];
+                $taskcode['endtime'] = strtotime($params['endtime']);
+                $taskcode['delay'] = explode('.', $params['taskname'])[1] == 'vlog' ? $taskcode['delay'] * 60 : strtotime($params['endtime']) - strtotime($params['pubtime']);
+                $taskcode_arr[] = $taskcode;
+
+                // 处理剩余字段
+                $params['status'] = 1;
+                $params['taskcode'] = json_encode($taskcode_arr,JSON_UNESCAPED_UNICODE);
+                $params['tasktype'] = strtoupper($params['tasktype']);
+                $params['amount'] = floor($taskcode['manually_amount'] * $taskcode['amount_multi']);
+                $params['updatetime'] = time();
+
                 $result = false;
                 Db::startTrans();
                 try {
@@ -185,7 +240,7 @@ class Task extends Backend
                     $this->error($e->getMessage());
                 }
                 if ($result !== false) {
-                    $this->success();
+                    $this->success(__('Insert task successful'),'task/add',$this->model->id);
                 } else {
                     $this->error(__('No rows were inserted'));
                 }
@@ -194,6 +249,9 @@ class Task extends Backend
         }
 
         $this->view->assign("row", '');
+        $this->view->assign("task_type", $task_type);
+        $this->view->assign("task_type_name", $this->task_type_name[$task_type]);
+        $this->view->assign("task_name", $this->task_operatea_name[$task_type]);
 
         return $this->view->fetch();
     }
@@ -203,7 +261,9 @@ class Task extends Backend
      */
     public function edit($ids = null)
     {
-        $row = $this->model->get($ids);
+        $row = $this->model->get($ids)->getData();
+        $row['taskcode'] = json_decode($row['taskcode'],true)[0];
+        $task_type = strtolower($row['tasktype']);
         if (!$row) {
             $this->error(__('No Results were found'));
         }
@@ -217,6 +277,23 @@ class Task extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
                 $params = $this->preExcludeFields($params);
+
+                // 处理taskcode字段
+                $taskcode = $params['taskcode'];
+                $taskcode['comment_content'] = '[NONSENSE]';
+                $taskcode['ss_policy'] = 'default';
+                $taskcode['operate'] = $params['taskname'];
+                $taskcode['endtime'] = strtotime($params['endtime']);
+                $taskcode['delay'] = explode('.', $params['taskname'])[1] == 'vlog' ? $taskcode['delay'] * 60 : strtotime($params['endtime']) - strtotime($params['pubtime']);
+                $taskcode_arr[] = $taskcode;
+
+                // 处理剩余字段
+                $params['status'] = 1;
+                $params['taskcode'] = json_encode($taskcode_arr,JSON_UNESCAPED_UNICODE);
+                $params['tasktype'] = strtoupper($params['tasktype']);
+                $params['amount'] = floor($taskcode['manually_amount'] * $taskcode['amount_multi']);
+                $params['updatetime'] = time();
+
                 $result = false;
                 Db::startTrans();
                 try {
@@ -226,6 +303,7 @@ class Task extends Backend
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
                         $row->validateFailException(true)->validate($validate);
                     }
+                    $row = $this->model->get($ids);
                     $result = $row->allowField(true)->save($params);
                     Db::commit();
                 } catch (ValidateException $e) {
@@ -239,7 +317,7 @@ class Task extends Backend
                     $this->error($e->getMessage());
                 }
                 if ($result !== false) {
-                    $this->success();
+                    $this->success(__('Update task successful'),'task/edit',$row->id);
                 } else {
                     $this->error(__('No rows were updated'));
                 }
@@ -247,6 +325,109 @@ class Task extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
         $this->view->assign("row", $row);
+
+        $this->view->assign("task_type", $task_type);
+        $this->view->assign("task_type_name", $this->task_type_name[$task_type]);
+        $this->view->assign("task_name", $this->task_operatea_name[$task_type]);
+        return $this->view->fetch();
+    }
+
+    public function detail(){
+        $task_id = $this->request->get('task_id');
+        $type = $this->request->get('type');
+
+        $task_info = [];
+        $task_record = \app\admin\model\Task::get(['id' => $task_id])->getData();
+        $task_code = json_decode($task_record['taskcode'],true);
+
+        $pubtime = time() > $task_record['pubtime'] ? time() : $task_record['pubtime'];
+
+        $task_info['verify_key'] = $task_code[0]['verify_key'];
+        $task_info['pubtime'] = date('Y-m-d H:i:s', $pubtime);
+        $task_info['endtime'] = date('Y-m-d H:i:s', $task_record['endtime']);
+
+        // 如果当前时间大于发布时间
+
+        $task_info['viewing_duration'] = ($task_record['endtime'] - $pubtime) / 60;
+        $task_info['manually_amount'] = $task_code[0]['manually_amount'];
+        $task_info['manually_comment_cnt'] = $task_code[0]['manually_comment_cnt'];
+
+        $type = explode('/',$type);
+        $this->view->assign("task_info", $task_info);
+        $this->view->assign("type", $type[2]);
+
+        return $this->view->fetch();
+    }
+
+    public function livepublish($ids = null){
+        $row = $this->model->get($ids)->getData();
+        $row['taskcode'] = json_decode($row['taskcode'],true)[0];
+        $task_type = strtolower($row['tasktype']);
+        if (!$row) {
+            $this->error(__('No Results were found'));
+        }
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                $params = $this->preExcludeFields($params);
+
+                // 处理taskcode字段
+                $taskcode = $params['taskcode'];
+                $taskcode['comment_content'] = '[NONSENSE]';
+                $taskcode['ss_policy'] = 'default';
+                $taskcode['operate'] = $params['taskname'];
+                $taskcode['endtime'] = strtotime($params['endtime']);
+                $taskcode['delay'] = explode('.', $params['taskname'])[1] == 'vlog' ? $taskcode['delay'] * 60 : strtotime($params['endtime']) - strtotime($params['pubtime']);
+                $taskcode_arr[] = $taskcode;
+
+                // 处理剩余字段
+                $params['status'] = 1;
+                $params['taskcode'] = json_encode($taskcode_arr,JSON_UNESCAPED_UNICODE);
+                $params['tasktype'] = strtoupper($params['tasktype']);
+                $params['amount'] = floor($taskcode['manually_amount'] * $taskcode['amount_multi']);
+                $params['updatetime'] = time();
+
+                $result = false;
+                Db::startTrans();
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
+                        $row->validateFailException(true)->validate($validate);
+                    }
+                    $row = $this->model->get($ids);
+                    $result = $row->allowField(true)->save($params);
+                    Db::commit();
+                } catch (ValidateException $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                } catch (PDOException $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                } catch (Exception $e) {
+                    Db::rollback();
+                    $this->error($e->getMessage());
+                }
+                if ($result !== false) {
+                    $this->success(__('Update task successful'),'task/edit',$row->id);
+                } else {
+                    $this->error(__('No rows were updated'));
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign("row", $row);
+
+        $this->view->assign("task_type", $task_type);
+        $this->view->assign("task_type_name", $this->task_type_name[$task_type]);
+        $this->view->assign("task_name", $this->task_operatea_name[$task_type]);
         return $this->view->fetch();
     }
 

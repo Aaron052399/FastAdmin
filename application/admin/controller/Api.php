@@ -84,23 +84,23 @@ class Api extends Backend
                 $params['taskname'] = $order_code['operate'];
                 $params['tasktype'] = strtoupper($task_name_arr[0]);
                 $params['amount'] = $order_code['manually_comment_cnt'];
-                $params['comment_file'] = $res;
+                $params['comment_file'] = isset($res) ? $res : '';
 
                 $task_code[] = [
-                    'follow_mintime' => $order_code['follow_mintime'],
-                    'follow_maxtime' => $order_code['follow_maxtime'],
+                    'follow_mintime' => $order_code['follow_mintime'] ?? 0,
+                    'follow_maxtime' => $order_code['follow_maxtime'] ?? 0,
                     'search_key' => $order_code['search_key'],
                     'search_nickname' => $order_code['search_nickname'],
                     'search_homepage' => $order_code['search_homepage'],
                     'verify_key' => $order_code['verify_key'],
-                    'delay' => isset($order_code['delay']) ? $order_code['delay'] : 0,
+                    'delay' => $order_code['delay'] ?? 0,
                     'operate' => $order_code['operate'],
                     'comment_content' => '[NONSENSE]',
                     'endtime' => $order_code['endtime'],
                     'ss_policy' => 'default',
                     'manually_amount' => $order_code['manually_amount'],
-                    'amount_multi' => $order_code['amount_multi'],
-                    'manually_follow_cnt' => $order_code['manually_follow_cnt'],
+                    'amount_multi' => $order_code['amount_multi'] ?? 0,
+                    'manually_follow_cnt' => $order_code['manually_follow_cnt'] ?? 0,
                     'manually_comment_cnt' => $order_code['manually_comment_cnt'],
                     'manually_praise_cnt' => $order_code['manually_praise_cnt'],
                     'manually_cart_cnt' => $order_code['manually_cart_cnt'],
@@ -211,24 +211,6 @@ class Api extends Backend
             }
         }
         return false;
-    }
-
-    private function validationField($params)
-    {
-        if (empty($params['taskcode'])) ;
-        $this->returnError(__('任务串不能为空！'));
-        if (empty($params['taskname'])) ;
-        $this->returnError(__('任务名称不能为空！'));
-        if (empty($params['tasktype'])) ;
-        $this->returnError(__('任务类型不能为空！'));
-        if (empty($params['updatetime'])) ;
-        $this->returnError(__('更新时间不能为空！'));
-        if (empty($params['pubtime'])) ;
-        $this->returnError(__('发布时间不能为空！'));
-        if (empty($params['endtime'])) ;
-        $this->returnError(__('结束时间不能为空！'));
-        if (empty($params['amount'])) ;
-        $this->returnError(__('发布数量不能为空！'));
     }
 
 }

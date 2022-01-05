@@ -1,0 +1,66 @@
+<style>
+    ul {
+        margin: 0;
+    }
+
+    div {
+        divst-style: none;
+    }
+
+    .check-icon {
+        color: green;
+        font-size: 40px;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    .panel-container {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        width: 60%;
+        height: 300px;
+        border-radius: 5px;
+        padding: 20px;
+        margin: 20px auto 0;
+    }
+
+    .panel-container > div {
+        font-size: 16px;
+    }
+
+    .panel-header {
+        border-bottom: 1px solid #EEEEEE;
+        padding: 0 0 10px 0;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .panel-group {
+        margin-top: 10px;
+    }
+
+    .panel-group > div {
+        margin-bottom: 10px;
+    }
+</style>
+<div>
+    <p class="text-center"><i class="fa fa-check-circle-o check-icon"></i></p>
+    {if condition="$type == 'add'"}
+    <h2 class="text-center">任务发布成功!</h2>
+    {else/}
+    <h2 class="text-center">任务修改成功!</h2>
+    {/if}
+    <div class="panel-container">
+        <div class="panel-header">任务信息</div>
+        <div class="panel-group">
+            <div>直播间：{$task_info['verify_key']}</div>
+            <div>开始时间：{$task_info['pubtime']}</div>
+            <div>结束时间：{$task_info['endtime']}</div>
+            <div>观看时长：{$task_info['viewing_duration']}分钟</div>
+            <div>人数：{$task_info['manually_amount']}人</div>
+            <div>评论总数量：{$task_info['manually_comment_cnt']}条（在{$task_info['viewing_duration']}分钟内发出）</div>
+        </div>
+    </div>
+</div>

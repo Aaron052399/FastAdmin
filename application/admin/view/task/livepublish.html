@@ -1,0 +1,49 @@
+<style>
+    .follow-group,.praise-group,.comment-group {
+        background: #dff0d8;
+        height: 150px;
+        padding: 10px;
+    }
+
+    .clear-task {
+        position: relative;
+        text-align: center;
+        margin-top: 20px;
+        padding: 3px 0;
+        color: rgba(255,255,255,0.8);
+        display: block;
+        z-index: 10;
+        background: rgba(0,0,0,0.1);
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .clear-task:hover {
+        color: #fff;
+        background: rgba(0,0,0,0.15);
+    }
+</style>
+<div class="col-sm-12">
+    <div class="col-sm-4">
+        <div class="follow-group">
+            <h1>0</h1>
+            <h4>剩余关注任务</h4>
+            <a href="#" class="clear-task" data-operation_type="1">清除任务</a>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="praise-group">
+            <h1>0</h1>
+            <h4>剩余点赞任务</h4>
+            <a href="#" class="clear-task" data-operation_type="2">清除任务</a>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="comment-group">
+            <h1>0</h1>
+            <h4>剩余评论任务</h4>
+            <a href="#" class="clear-task" data-operation_type="3">清除任务</a>
+        </div>
+    </div>
+</div>

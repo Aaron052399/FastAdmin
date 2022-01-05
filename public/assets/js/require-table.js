@@ -74,6 +74,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
             addtaskbtn: '.btn-addtask',
             editbtn: '.btn-edit',
             delbtn: '.btn-del',
+            livepublishbtn: '.btn-livepublish',
             soldoutbtn: '.btn-soldout',
             download: '.btn-download',
             importbtn: '.btn-import',
@@ -108,7 +109,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 icon: 'fa fa-trash',
                 title: __('Sold out'),
                 extend: 'data-toggle="tooltip"',
-                classname: 'btn btn-xs btn-danger btn-delone',
+                classname: 'btn btn-xs btn-danger btn-soldOutOne',
                 text: __('Sold out'),
             },
             download: {
@@ -118,6 +119,14 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 extend: 'data-toggle="tooltip"',
                 classname: 'btn btn-xs btn-info btn-download',
                 text: __('Download screen shot'),
+            },
+            livepublish: {
+                name: 'livepublish',
+                icon: 'fa fa-server',
+                title: __('Live publish'),
+                extend: 'data-toggle="tooltip"',
+                classname: 'btn btn-xs btn-danger btn-livepublish',
+                text: __('Live publish'),
             },
             dragsort: {
                 name: 'dragsort',
@@ -535,6 +544,14 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     var url = Table.api.replaceurl(options.extend.edit_url, row, table);
                     Fast.api.open(url, $(this).data("original-title") || $(this).attr("title") || __('Edit'), $(this).data() || {});
                 });
+                table.on("click", "[data-id].btn-livepublish", function (e) {
+                    e.preventDefault();
+                    var ids = $(this).data("id");
+                    var row = Table.api.getrowbyid(table, ids);
+                    row.ids = ids;
+                    var url = Table.api.replaceurl(options.extend.livepublish_url, row, table);
+                    Fast.api.open(url, $(this).data("original-title") || $(this).attr("title") || __('Live publish'), $(this).data() || {});
+                });
                 table.on("click", "[data-id].btn-del", function (e) {
                     e.preventDefault();
                     var id = $(this).data("id");
@@ -683,6 +700,16 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         window.open('http://api.morsx.cn:8043/download_ss/?name=task_' + ids);
+                    },
+                    'click .btn-livepublish': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = options.extend.livepublish_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), $(this).data("original-title") || $(this).attr("title") || __('Live publish'), $(this).data() || {});
                     },
                 },//单元格图片预览
                 image: {
@@ -910,6 +937,9 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     if (options.extend.download_url !== '' && names.indexOf('download') === -1) {
                         buttons.push(Table.button.download);
                     }
+                    if (options.extend.livepublish_url !== '' && names.indexOf('livepublish') === -1) {
+                        buttons.push(Table.button.livepublish);
+                    }
                     return Table.api.buttonlinks(this, buttons, value, row, index, 'operate');
                 }
                 ,
@@ -935,7 +965,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         if (j.name === 'dragsort' && typeof row[Table.config.dragsortfield] === 'undefined') {
                             return true;
                         }
-                        if (['add', 'edit', 'del', 'multi', 'dragsort','download','soldout'].indexOf(j.name) > -1 && !options.extend[j.name + "_url"]) {
+                        if (['add', 'edit', 'del', 'multi', 'dragsort','download','soldout','livepublish'].indexOf(j.name) > -1 && !options.extend[j.name + "_url"]) {
                             return true;
                         }
                     }
