@@ -24,8 +24,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 $(".btn-editone").data("area",["100%","100%"]);
             });
 
-            undefined.on();
-
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
