@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'name' => '任务管理后台',
+  'name' => '任务管理后台(预发布)',
   'beian' => '',
   'cdnurl' => '',
   'version' => '1.0.18',
