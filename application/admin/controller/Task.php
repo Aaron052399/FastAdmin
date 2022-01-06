@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\controller\Backend;
+use app\common\library\token\driver\Redis;
 use think\Db;
 use think\exception\PDOException;
 use think\exception\ValidateException;
@@ -202,21 +203,7 @@ class Task extends Backend
                     $params[$this->dataLimitField] = $this->auth->id;
                 }
 
-                // 处理taskcode字段
-                $taskcode = $params['taskcode'];
-                $taskcode['comment_content'] = '[NONSENSE]';
-                $taskcode['ss_policy'] = 'default';
-                $taskcode['operate'] = $params['taskname'];
-                $taskcode['endtime'] = strtotime($params['endtime']);
-                $taskcode['delay'] = explode('.', $params['taskname'])[1] == 'vlog' ? $taskcode['delay'] * 60 : strtotime($params['endtime']) - strtotime($params['pubtime']);
-                $taskcode_arr[] = $taskcode;
-
-                // 处理剩余字段
-                $params['status'] = 1;
-                $params['taskcode'] = json_encode($taskcode_arr,JSON_UNESCAPED_UNICODE);
-                $params['tasktype'] = strtoupper($params['tasktype']);
-                $params['amount'] = floor($taskcode['manually_amount'] * $taskcode['amount_multi']);
-                $params['updatetime'] = time();
+                $params = array_merge($params,$this->processingFields($params));
 
                 $result = false;
                 Db::startTrans();
@@ -278,21 +265,7 @@ class Task extends Backend
             if ($params) {
                 $params = $this->preExcludeFields($params);
 
-                // 处理taskcode字段
-                $taskcode = $params['taskcode'];
-                $taskcode['comment_content'] = '[NONSENSE]';
-                $taskcode['ss_policy'] = 'default';
-                $taskcode['operate'] = $params['taskname'];
-                $taskcode['endtime'] = strtotime($params['endtime']);
-                $taskcode['delay'] = explode('.', $params['taskname'])[1] == 'vlog' ? $taskcode['delay'] * 60 : strtotime($params['endtime']) - strtotime($params['pubtime']);
-                $taskcode_arr[] = $taskcode;
-
-                // 处理剩余字段
-                $params['status'] = 1;
-                $params['taskcode'] = json_encode($taskcode_arr,JSON_UNESCAPED_UNICODE);
-                $params['tasktype'] = strtoupper($params['tasktype']);
-                $params['amount'] = floor($taskcode['manually_amount'] * $taskcode['amount_multi']);
-                $params['updatetime'] = time();
+                $params = array_merge($params,$this->processingFields($params));
 
                 $result = false;
                 Db::startTrans();
@@ -360,6 +333,15 @@ class Task extends Backend
     }
 
     public function livepublish($ids = null){
+//        $redis = new \Redis();
+//        $redis->connect('127.0.0.1',6379);
+//        $res = $redis->set('names','test');
+//        $res = $redis->get('name');
+//        $res = $redis->ping();
+//        var_dump($res);
+
+
+        exit;
         $row = $this->model->get($ids)->getData();
         $row['taskcode'] = json_decode($row['taskcode'],true)[0];
         $task_type = strtolower($row['tasktype']);
@@ -429,6 +411,27 @@ class Task extends Backend
         $this->view->assign("task_type_name", $this->task_type_name[$task_type]);
         $this->view->assign("task_name", $this->task_operatea_name[$task_type]);
         return $this->view->fetch();
+    }
+
+    private function processingFields($params)
+    {
+        // 处理taskcode字段
+        $taskcode = $params['taskcode'];
+        $taskcode['comment_content'] = '[NONSENSE]';
+        $taskcode['ss_policy'] = 'default';
+        $taskcode['operate'] = $params['taskname'];
+        $taskcode['endtime'] = strtotime($params['endtime']);
+        $taskcode['delay'] = explode('.', $params['taskname'])[1] == 'vlog' ? $taskcode['delay'] * 60 : strtotime($params['endtime']) - strtotime($params['pubtime']);
+        $taskcode_arr[] = $taskcode;
+
+        // 处理剩余字段
+        $params['status'] = 1;
+        $params['taskcode'] = json_encode($taskcode_arr,JSON_UNESCAPED_UNICODE+JSON_NUMERIC_CHECK);
+        $params['tasktype'] = strtoupper($params['tasktype']);
+        $params['amount'] = floor($taskcode['manually_amount'] * $taskcode['amount_multi']);
+        $params['updatetime'] = time();
+
+        return $params;
     }
 
 }

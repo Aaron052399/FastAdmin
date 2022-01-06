@@ -33,19 +33,19 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-3">{:__('直播间搜索串')}:</label>
         <div class="col-xs-12 col-sm-7">
-            <input id="c-search_key" data-rule="required" class="form-control" name="row[taskcode][search_key]" type="text" placeholder="直播间搜索串" value="{$row['taskcode']['search_key']}">
+            <input id="c-search_key" class="form-control" name="row[taskcode][search_key]" type="text" placeholder="直播间搜索串" value="{$row['taskcode']['search_key']}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-3">{:__('用户昵称')}:</label>
         <div class="col-xs-12 col-sm-7">
-            <input id="c-search_nickname" data-rule="required" class="form-control" name="row[taskcode][search_nickname]" type="text" placeholder="用户昵称" value="{$row['taskcode']['search_nickname']}">
+            <input id="c-search_nickname" class="form-control" name="row[taskcode][search_nickname]" type="text" placeholder="用户昵称" value="{$row['taskcode']['search_nickname']}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-3">{:__('用户主页')}:</label>
         <div class="col-xs-12 col-sm-7">
-            <input id="c-search_homepage" data-rule="required" class="form-control" name="row[taskcode][search_homepage]" type="text" placeholder="用户主页" value="{$row['taskcode']['search_homepage']}">
+            <input id="c-search_homepage" class="form-control" name="row[taskcode][search_homepage]" type="text" placeholder="用户主页" value="{$row['taskcode']['search_homepage']}">
         </div>
     </div>
     <div class="form-group">
@@ -80,28 +80,28 @@
         <div class="col-xs-12 col-sm-7">
             <input id="c-manually_praise_cnt" class="form-control" name="row[taskcode][manually_praise_cnt]" type="number" value="{$row['taskcode']['manually_praise_cnt']}">
         </div>
-        <p style="color:red">每小时点赞总数</p>
+        <p id="manually_praise_cnt_tips" style="color:red">点赞总数</p>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-3">{:__('评论数量')}:</label>
         <div class="col-xs-12 col-sm-7">
             <input id="c-manually_comment_cnt" class="form-control" name="row[taskcode][manually_comment_cnt]" type="number" value="{$row['taskcode']['manually_comment_cnt']}">
         </div>
-        <p style="color:red">每小时评论总数</p>
+        <p id="manually_comment_cnt_tips" style="color:red">评论总数</p>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-3">{:__('购物车数量')}:</label>
         <div class="col-xs-12 col-sm-7">
             <input id="c-manually_cart_cnt" class="form-control" name="row[taskcode][manually_cart_cnt]" type="number" value="{$row['taskcode']['manually_cart_cnt']}">
         </div>
-        <p style="color:red">每小时进购物车总次数</p>
+        <p id="manually_cart_cnt_tips" style="color:red">进购物车总次数</p>
     </div>
     <div class="form-group delay" style="display: none">
         <label class="control-label col-xs-12 col-sm-3">{:__('延迟')}:</label>
         <div class="col-xs-12 col-sm-7">
             <input id="c-delay" class="form-control" name="row[taskcode][delay]" type="number" value="{$row['taskcode']['delay']}">
         </div>
-        <p style="color:red">/分钟</p>
+        <p style="color:red">分钟</p>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-3">{:__('Comment_file')}:</label>
@@ -119,17 +119,17 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-3">{:__('Pubtime')}:</label>
         <div class="col-xs-12 col-sm-7">
-            <input id="c-pubtime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[pubtime]" type="text" value="{:date('Y-m-d H:i:s',$row['pubtime'])}">
+            <input id="c-pubtime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-date-side-by-side="true" data-use-current="true" name="row[pubtime]" type="text" value="{:date('Y-m-d H:i:s',$row['pubtime'])}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-3">{:__('Endtime')}:</label>
         <div class="col-xs-12 col-sm-7">
-            <input id="c-endtime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[endtime]" type="text" value="{:date('Y-m-d H:i:s',$row['endtime'])}">
+            <input id="c-endtime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-date-side-by-side="true" data-use-current="true" name="row[endtime]" type="text" value="{:date('Y-m-d H:i:s',$row['pubtime'])}">
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-3">{:__('Reward')}:</label>
+        <label class="control-label col-xs-12 col-sm-3" id="reward_title">{:__('奖励香蕉')}:</label>
         <div class="col-xs-12 col-sm-7">
             <input id="c-reward" class="form-control" name="row[reward]" type="number" value="{$row['reward']}">
         </div>
@@ -137,14 +137,14 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-3">{:__('任务数量')}:</label>
         <div class="col-xs-12 col-sm-7">
-            <input id="c-manually_amount" class="form-control" name="row[taskcode][manually_amount]" type="number" value="{$row['taskcode']['manually_amount']}">
+            <input id="c-manually_amount" class="form-control" name="row[taskcode][manually_amount]" type="number" value="{$row['reward']}">
         </div>
         <p style="color:red">任务原始数量</p>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-3">{:__('任务倍数')}:</label>
         <div class="col-xs-12 col-sm-7">
-            <input id="c-amount_multi" class="form-control" name="row[taskcode][amount_multi]" type="number" value="{$row['taskcode']['amount_multi']}">
+            <input id="c-amount_multi" class="form-control" name="row[taskcode][amount_multi]" type="number" value="{$row['taskcode']['amount_multi']}" step="0.1">
         </div>
         <p style="color:red">任务数量倍数</p>
     </div>

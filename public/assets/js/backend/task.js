@@ -1,7 +1,8 @@
-define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function ($, undefined, Backend, Table, Form, Template) {
+define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function ($, undefined, Backend, Table, Form) {
 
     var Controller = {
         index: function () {
+            $(".btn-addtask,.btn-edit").data("area",["100%","100%"]);
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
@@ -18,6 +19,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
             });
 
             var table = $("#table");
+
+            table.on('post-body.bs.table',function(){
+                $(".btn-editone").data("area",["100%","100%"]);
+            });
+
+            undefined.on();
 
             // 初始化表格
             table.bootstrapTable({
@@ -130,16 +137,77 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
         add: function () {
             Controller.api.bindevent();
             $(document).on("change", "#c-taskname", function () {
+                var manually_praise_cnt_tips = $('#manually_praise_cnt_tips').text();
+                var manually_comment_cnt_tips = $('#manually_comment_cnt_tips').text();
+                var manually_cart_cnt_tips = $('#manually_cart_cnt_tips').text();
+                var reward_title = $('#reward_title').text();
+
                 //变更后的回调事件
                 if ($(this).val().split('.')[1] === 'vlog') {
                     $('.delay').css({'display': 'block'});
+                    $('#c-reward').val(3);
+                    $('#manually_praise_cnt_tips').text(manually_praise_cnt_tips.replace('每小时',''));
+                    $('#manually_comment_cnt_tips').text(manually_comment_cnt_tips.replace('每小时',''));
+                    $('#manually_cart_cnt_tips').text(manually_cart_cnt_tips.replace('每小时',''));
+                    $('#reward_title').text(reward_title.replace('/小时',''));
                 } else {
+                    $('#manually_praise_cnt_tips').text('每小时' + manually_praise_cnt_tips);
+                    $('#manually_comment_cnt_tips').text('每小时' + manually_comment_cnt_tips);
+                    $('#manually_cart_cnt_tips').text('每小时' + manually_cart_cnt_tips);
+                    $('#reward_title').text(reward_title + '/小时');
                     $('.delay').css({'display': 'none'});
+                    $('#c-reward').val(30);
                 }
             });
         },
         edit: function () {
             Controller.api.bindevent();
+
+            var manually_praise_cnt_tips = $('#manually_praise_cnt_tips').text();
+            var manually_comment_cnt_tips = $('#manually_comment_cnt_tips').text();
+            var manually_cart_cnt_tips = $('#manually_cart_cnt_tips').text();
+            var reward_title = $('#reward_title').text();
+
+            //变更后的回调事件
+            if ($('#c-taskname').val().split('.')[1] === 'vlog') {
+                $('.delay').css({'display': 'block'});
+                $('#c-reward').val(3);
+                $('#manually_praise_cnt_tips').text(manually_praise_cnt_tips.replace('每小时',''));
+                $('#manually_comment_cnt_tips').text(manually_comment_cnt_tips.replace('每小时',''));
+                $('#manually_cart_cnt_tips').text(manually_cart_cnt_tips.replace('每小时',''));
+                $('#reward_title').text(reward_title.replace('/小时',''));
+            } else {
+                $('#manually_praise_cnt_tips').text('每小时' + manually_praise_cnt_tips);
+                $('#manually_comment_cnt_tips').text('每小时' + manually_comment_cnt_tips);
+                $('#manually_cart_cnt_tips').text('每小时' + manually_cart_cnt_tips);
+                $('#reward_title').text(reward_title + '/小时');
+                $('.delay').css({'display': 'none'});
+                $('#c-reward').val(30);
+            }
+
+            $(document).on("change", "#c-taskname", function () {
+                var manually_praise_cnt_tips = $('#manually_praise_cnt_tips').text();
+                var manually_comment_cnt_tips = $('#manually_comment_cnt_tips').text();
+                var manually_cart_cnt_tips = $('#manually_cart_cnt_tips').text();
+                var reward_title = $('#reward_title').text();
+
+                //变更后的回调事件
+                if ($(this).val().split('.')[1] === 'vlog') {
+                    $('.delay').css({'display': 'block'});
+                    $('#c-reward').val(3);
+                    $('#manually_praise_cnt_tips').text(manually_praise_cnt_tips.replace('每小时',''));
+                    $('#manually_comment_cnt_tips').text(manually_comment_cnt_tips.replace('每小时',''));
+                    $('#manually_cart_cnt_tips').text(manually_cart_cnt_tips.replace('每小时',''));
+                    $('#reward_title').text(reward_title.replace('/小时',''));
+                } else {
+                    $('#manually_praise_cnt_tips').text('每小时' + manually_praise_cnt_tips);
+                    $('#manually_comment_cnt_tips').text('每小时' + manually_comment_cnt_tips);
+                    $('#manually_cart_cnt_tips').text('每小时' + manually_cart_cnt_tips);
+                    $('#reward_title').text(reward_title + '/小时');
+                    $('.delay').css({'display': 'none'});
+                    $('#c-reward').val(30);
+                }
+            });
         },
         livepublish: function () {
             $('.clear-task').on('click', function () {
@@ -165,6 +233,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     parent.$(".btn-refresh").trigger("click");
                     window.location.href = '/task/detail?task_id=' + data + '&type=' + ret.url;
                     return false;
+                },function (data,ret) {
+                    
+                },function (success, error) {
+                    if ($('#c-search_key').val() == '' && $('#c-search_nickname').val() == '' && $('#c-search_homepage').val() == ''){
+                        Toastr.error('直播间搜索串、用户昵称、用户主页，至少填写一个！');
+                        $('#c-search_key,#c-search_nickname,#c-search_homepage').css({'border':'1px red solid'}).focus();
+                        return false;
+                    }
+                    $('#c-search_key,#c-search_nickname,#c-search_homepage').css({'border':'1px solid #ccc'});
                 });
             }
         }
