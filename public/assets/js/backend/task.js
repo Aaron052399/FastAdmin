@@ -135,91 +135,35 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
         add: function () {
             Controller.api.bindevent();
             $(document).on("change", "#c-taskname", function () {
-                var manually_praise_cnt_tips = $('#manually_praise_cnt_tips').text();
-                var manually_comment_cnt_tips = $('#manually_comment_cnt_tips').text();
-                var manually_cart_cnt_tips = $('#manually_cart_cnt_tips').text();
-                var reward_title = $('#reward_title').text();
-
-                //变更后的回调事件
-                if ($(this).val().split('.')[1] === 'vlog') {
-                    $('.delay').css({'display': 'block'});
-                    $('#c-reward').val(3);
-                    $('#manually_praise_cnt_tips').text(manually_praise_cnt_tips.replace('每小时',''));
-                    $('#manually_comment_cnt_tips').text(manually_comment_cnt_tips.replace('每小时',''));
-                    $('#manually_cart_cnt_tips').text(manually_cart_cnt_tips.replace('每小时',''));
-                    $('#reward_title').text(reward_title.replace('/小时',''));
-                } else {
-                    $('#manually_praise_cnt_tips').text('每小时' + manually_praise_cnt_tips);
-                    $('#manually_comment_cnt_tips').text('每小时' + manually_comment_cnt_tips);
-                    $('#manually_cart_cnt_tips').text('每小时' + manually_cart_cnt_tips);
-                    $('#reward_title').text(reward_title + '/小时');
-                    $('.delay').css({'display': 'none'});
-                    $('#c-reward').val(30);
-                }
+                var that = $(this);
+                Controller.api.events(that);
             });
 
             $(document).on('change','#c-search_nickname',function () {
                 var that = $(this).val();
                 if ($('#c-verify_key').val() == '')
                 {
-                    $('#c-verify_key').val(that);
+                    $('#c-verify_key').focus().val(that);
                 }
             });
         },
         edit: function () {
             Controller.api.bindevent();
 
-            var manually_praise_cnt_tips = $('#manually_praise_cnt_tips').text();
-            var manually_comment_cnt_tips = $('#manually_comment_cnt_tips').text();
-            var manually_cart_cnt_tips = $('#manually_cart_cnt_tips').text();
-            var reward_title = $('#reward_title').text();
-
-            //变更后的回调事件
-            if ($('#c-taskname').val().split('.')[1] === 'vlog') {
-                $('.delay').css({'display': 'block'});
-                $('#c-reward').val(3);
-                $('#manually_praise_cnt_tips').text(manually_praise_cnt_tips.replace('每小时',''));
-                $('#manually_comment_cnt_tips').text(manually_comment_cnt_tips.replace('每小时',''));
-                $('#manually_cart_cnt_tips').text(manually_cart_cnt_tips.replace('每小时',''));
-                $('#reward_title').text(reward_title.replace('/小时',''));
-            } else {
-                $('#manually_praise_cnt_tips').text('每小时' + manually_praise_cnt_tips);
-                $('#manually_comment_cnt_tips').text('每小时' + manually_comment_cnt_tips);
-                $('#manually_cart_cnt_tips').text('每小时' + manually_cart_cnt_tips);
-                $('#reward_title').text(reward_title + '/小时');
-                $('.delay').css({'display': 'none'});
-                $('#c-reward').val(30);
-            }
+            var val = $('#c-taskname');
+            Controller.api.events(val);
 
             $(document).on("change", "#c-taskname", function () {
-                var manually_praise_cnt_tips = $('#manually_praise_cnt_tips').text();
-                var manually_comment_cnt_tips = $('#manually_comment_cnt_tips').text();
-                var manually_cart_cnt_tips = $('#manually_cart_cnt_tips').text();
-                var reward_title = $('#reward_title').text();
-
                 //变更后的回调事件
-                if ($(this).val().split('.')[1] === 'vlog') {
-                    $('.delay').css({'display': 'block'});
-                    $('#c-reward').val(3);
-                    $('#manually_praise_cnt_tips').text(manually_praise_cnt_tips.replace('每小时',''));
-                    $('#manually_comment_cnt_tips').text(manually_comment_cnt_tips.replace('每小时',''));
-                    $('#manually_cart_cnt_tips').text(manually_cart_cnt_tips.replace('每小时',''));
-                    $('#reward_title').text(reward_title.replace('/小时',''));
-                } else {
-                    $('#manually_praise_cnt_tips').text('每小时' + manually_praise_cnt_tips);
-                    $('#manually_comment_cnt_tips').text('每小时' + manually_comment_cnt_tips);
-                    $('#manually_cart_cnt_tips').text('每小时' + manually_cart_cnt_tips);
-                    $('#reward_title').text(reward_title + '/小时');
-                    $('.delay').css({'display': 'none'});
-                    $('#c-reward').val(30);
-                }
+                var that = $(this);
+                Controller.api.events(that);
             });
 
             $(document).on('change','#c-search_nickname',function () {
                 var that = $(this).val();
                 if ($('#c-verify_key').val() == '')
                 {
-                    $('#c-verify_key').val(that);
+                    $('#c-verify_key').focus().val(that);
                 }
             });
         },
@@ -257,6 +201,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     }
                     $('#c-search_key,#c-search_nickname,#c-search_homepage').css({'border':'1px solid #ccc'});
                 });
+            },
+            events: function (that) {
+                var manually_praise_cnt_tips = $('#manually_praise_cnt_tips').text();
+                var manually_comment_cnt_tips = $('#manually_comment_cnt_tips').text();
+                var manually_cart_cnt_tips = $('#manually_cart_cnt_tips').text();
+
+                if (that.val().split('.')[1] === 'vlog') {
+                    $('.delay').css({'display': 'block'});
+                    $('#c-reward').val(30);
+                    $('#manually_praise_cnt_tips').text(manually_praise_cnt_tips.replace('每小时',''));
+                    $('#manually_comment_cnt_tips').text(manually_comment_cnt_tips.replace('每小时',''));
+                    $('#manually_cart_cnt_tips').text(manually_cart_cnt_tips.replace('每小时',''));
+                    $('#reward_title').text('每次');
+                } else {
+                    $('#manually_praise_cnt_tips').text('每小时' + manually_praise_cnt_tips);
+                    $('#manually_comment_cnt_tips').text('每小时' + manually_comment_cnt_tips);
+                    $('#manually_cart_cnt_tips').text('每小时' + manually_cart_cnt_tips);
+                    $('#reward_title').text('每分钟');
+                    $('.delay').css({'display': 'none'});
+                    $('#c-reward').val(3);
+                }
             }
         }
     };
