@@ -157,6 +157,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     $('#c-reward').val(30);
                 }
             });
+
+            $(document).on('change','#c-search_nickname',function () {
+                var that = $(this).val();
+                if ($('#c-verify_key').val() == '')
+                {
+                    $('#c-verify_key').val(that);
+                }
+            });
         },
         edit: function () {
             Controller.api.bindevent();
@@ -204,6 +212,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     $('#reward_title').text(reward_title + '/小时');
                     $('.delay').css({'display': 'none'});
                     $('#c-reward').val(30);
+                }
+            });
+
+            $(document).on('change','#c-search_nickname',function () {
+                var that = $(this).val();
+                if ($('#c-verify_key').val() == '')
+                {
+                    $('#c-verify_key').val(that);
                 }
             });
         },

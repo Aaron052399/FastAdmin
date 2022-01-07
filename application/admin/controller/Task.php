@@ -340,7 +340,7 @@ class Task extends Backend
 //        $res = $redis->ping();
 //        var_dump($res);
 
-
+        echo '<h2 style="text-align: center;margin-top: 25%">开发中···</h2>';
         exit;
         $row = $this->model->get($ids)->getData();
         $row['taskcode'] = json_decode($row['taskcode'],true)[0];
