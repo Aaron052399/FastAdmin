@@ -39,11 +39,11 @@ class Task extends Command
         $log = '';
         $log .= date('Y-m-d H:i:s ');
         // 查询任务拆分日志表对应信息
-        $task_split_log_list = Db::table('tbl_task_split_log')->field('task_id,status,order_id')->where(['is_inform' => 0])->select();
+        $task_split_log_list = Db::table('tbl_task_split_log')->field('task_id,status,order_id,order_number')->where(['is_inform' => 0])->select();
         if (count($task_split_log_list) > 0) {
             $task_info_arr = [];
             foreach ($task_split_log_list as $item) {
-                $task_record = Db::table('tbl_task')->field('id,status')->where(['id' => $item['task_id']])->find();
+                $task_record = Db::table('tbl_task')->field('id,status,updatetime')->where(['id' => $item['task_id']])->find();
                 // 判断任务状态是否已过待执行和执行中
                 if ($task_record['status'] != 1 && $task_record['status'] != 2 && $item['status'] != $task_record['status']) {
                     // 修改任务拆分日志表对应信息
@@ -57,7 +57,7 @@ class Task extends Command
                     $task_info_arr['data']['order_info'][] = [
                         'order_id' => $item['order_id'],
                         'status' => $this->status_arr[$task_record['status']],
-                        'endtime' => $task_record['endtime'],
+                        'endtime' => $task_record['updatetime'],
                         'order_number' => $item['order_number'],
                     ];
                 } elseif ($item['status'] != 1 && $item['status'] != 2 && empty($item['is_inform'])) {
@@ -69,7 +69,7 @@ class Task extends Command
                     $task_info_arr['data']['order_info'][] = [
                         'order_id' => $item['order_id'],
                         'status' => $this->status_arr[$item['status']],
-                        'endtime' => $task_record['endtime'],
+                        'endtime' => $task_record['updatetime'],
                         'order_number' => $item['order_number'],
                     ];
                 }

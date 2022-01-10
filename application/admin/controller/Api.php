@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\controller\Backend;
+use app\common\library\Curl;
 use think\Db;
 use think\exception\PDOException;
 use think\exception\ValidateException;
@@ -170,6 +171,12 @@ class Api extends Backend
         }
     }
 
+    public function test()
+    {
+        $res = $this->downFile('http://api.morsx.cn:9000/upload/default/20211227/a33db0b369db5317a98837291417d581.txt');
+        var_dump($res);exit;
+    }
+
     /**
      * CURL下载文件 成功返回文件名，失败返回false
      * @param $url
@@ -179,6 +186,9 @@ class Api extends Backend
      */
     private function downFile($url, $savePath = './comment_files')
     {
+        echo file_get_contents($url);
+        exit;
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -195,6 +205,7 @@ class Api extends Backend
         }
         curl_close($ch);
 
+        var_dump(explode(' ',iconv('gb2312', 'utf-8', $body)));exit;
         //文件名
         $arr = array();
         if (preg_match('/filename=(.*)/', $header, $arr)) {
