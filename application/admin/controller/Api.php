@@ -91,7 +91,7 @@ class Api extends Backend
                 $params['taskname'] = $order_code['operate'];
                 $params['tasktype'] = strtoupper($task_name_arr[0]);
                 $params['amount'] = $order_code['manually_comment_cnt'];
-                $params['comment_file'] = isset($res) ? $res : '';
+                $params['comment_file'] = !empty($res) ? $res : '';
 
                 $task_code[] = [
                     'follow_mintime' => $order_code['follow_mintime'] ?? 0,
@@ -229,7 +229,9 @@ class Api extends Backend
             }
 
             if (file_put_contents($save_path, iconv('gb2312', 'utf-8', $body))) {
-                return $fileName;
+                $path_arr = explode('/',$save_path);
+                unset($path_arr[0]);
+                return implode('/',$path_arr);
             }
         }
 
