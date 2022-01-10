@@ -171,12 +171,6 @@ class Api extends Backend
         }
     }
 
-    public function test()
-    {
-        $res = $this->downFile('http://api.morsx.cn:9000/upload/default/20211227/a33db0b369db5317a98837291417d581.txt');
-        var_dump($res);exit;
-    }
-
     /**
      * CURL下载文件 成功返回文件名，失败返回false
      * @param $url
@@ -186,9 +180,6 @@ class Api extends Backend
      */
     private function downFile($url, $savePath = './comment_files')
     {
-        echo file_get_contents($url);
-        exit;
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -205,13 +196,12 @@ class Api extends Backend
         }
         curl_close($ch);
 
-        var_dump(explode(' ',iconv('gb2312', 'utf-8', $body)));exit;
         //文件名
         $arr = array();
         if (preg_match('/filename=(.*)/', $header, $arr)) {
-            $file_name_arr = explode('.',$arr[1]);
+            $file_name_arr = explode('.', $arr[1]);
             $file_name_arr[0] = $file_name_arr[0] . '_' . uniqid();
-            $file_name = trim(implode('.',$file_name_arr));
+            $file_name = trim(implode('.', $file_name_arr));
             $file = date('Ym') . '/' . date('d') . '/' . $file_name;
             $fullName = rtrim($savePath, '/') . '/' . $file;
             //创建目录并设置权限
@@ -222,11 +212,27 @@ class Api extends Backend
             }
 
             if (file_put_contents($fullName, $body)) {
-                $fullName = explode('/',$fullName);
+                $fullName = explode('/', $fullName);
                 unset($fullName[0]);
-                return implode('/',$fullName);
+                return implode('/', $fullName);
+            }
+        } else {
+            $fileNameArr = explode('/',$url);
+            $fileName = array_pop($fileNameArr);
+            $save_path = $savePath . '/' .date('Ym') . '/' . date('d') . '/' . $fileName;
+
+            //创建目录并设置权限
+            $basePath = dirname($save_path);
+            if (!file_exists($basePath)) {
+                @mkdir($basePath, 0777, true);
+                @chmod($basePath, 0777);
+            }
+
+            if (file_put_contents($save_path, iconv('gb2312', 'utf-8', $body))) {
+                return $fileName;
             }
         }
+
         return false;
     }
 
