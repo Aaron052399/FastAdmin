@@ -57,8 +57,14 @@ class Api extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->param();
 
-            // 验证Token是否正确
-            if (!isset($params['token'])) $this->returnError(__('Token verification error!'));
+            // 验证所有参数
+            if (!isset($params['token'])) $this->returnError(__('Token is empty!'));
+            if (!isset($params['request_time'])) $this->returnError(__('Request time is empty!'));
+            if (!isset($params['ordercode'])) $this->returnError(__('Ordercode is empty!'));
+            if (!isset($params['order_id'])) $this->returnError(__('Order_id is empty!'));
+            if (!isset($params['order_number'])) $this->returnError(__('Order_number is empty!'));
+
+            // 校验Token是否正确
             if ($params['token'] != md5($this->public_key . $params['request_time'])) {
                 $this->returnError(__('Token verification error'));
             }

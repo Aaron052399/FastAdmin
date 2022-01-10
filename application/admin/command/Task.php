@@ -57,6 +57,8 @@ class Task extends Command
                     $task_info_arr['data']['order_info'][] = [
                         'order_id' => $item['order_id'],
                         'status' => $this->status_arr[$task_record['status']],
+                        'endtime' => $task_record['endtime'],
+                        'order_number' => $item['order_number'],
                     ];
                 } elseif ($item['status'] != 1 && $item['status'] != 2 && empty($item['is_inform'])) {
                     // 输出对应日志信息
@@ -67,6 +69,8 @@ class Task extends Command
                     $task_info_arr['data']['order_info'][] = [
                         'order_id' => $item['order_id'],
                         'status' => $this->status_arr[$item['status']],
+                        'endtime' => $task_record['endtime'],
+                        'order_number' => $item['order_number'],
                     ];
                 }
             }
@@ -83,7 +87,7 @@ class Task extends Command
                 $res = json_decode($Curl->post('http://api.morsx.cn:9000/api/order/index/change_status', http_build_query($task_info_arr)), true);
                 // 判断是否有数据
                 if ($res['code'] == 1 && !empty($res['data'])) {
-                    foreach (json_decode($res['data'],true) as $v) {
+                    foreach (json_decode($res['data'], true) as $v) {
                         // 如果返回状态为成功
                         if ($v['status'] == 1) {
                             // 修改任务拆分日志表对应信息
