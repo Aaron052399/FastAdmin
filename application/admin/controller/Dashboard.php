@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\Admin;
-use app\admin\model\Users;
+use app\admin\model\User;
 use app\common\controller\Backend;
 use app\common\model\Attachment;
 use fast\Date;
@@ -42,6 +42,7 @@ class Dashboard extends Backend
             'totaladdon'      => count(get_addon_list()),
             'totaladmin'      => Admin::count(),
             'totalcategory'   => \app\common\model\Category::count(),
+            'totaluser'       => User::count(),
             'dbtablenums'     => count($dbTableList),
             'dbsize'          => array_sum(array_map(function ($item) {
                 return $item['Data_length'] + $item['Index_length'];

@@ -5,7 +5,7 @@ return [
     'Pid'                     => '父ID',
     'Type'                    => '栏目类型',
     'Image'                   => '图片',
-    'Total user'              => '总会员数',
+    'Total user'              => '总用户数',
     'Total addon'             => '总插件数',
     'Total category'          => '总分类数',
     'Total admin'             => '总管理员数',
