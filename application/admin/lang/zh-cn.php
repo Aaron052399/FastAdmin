@@ -187,7 +187,7 @@ return [
     'Admin log'                                             => '管理员日志',
     'Group'                                                 => '角色组',
     'Rule'                                                  => '菜单规则',
-    'User'                                                  => '会员管理',
+    'User'                                                  => '用户管理',
     'User group'                                            => '会员分组',
     'User rule'                                             => '会员规则',
     'Select attachment'                                     => '选择附件',
