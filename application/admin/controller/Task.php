@@ -313,15 +313,14 @@ class Task extends Backend
         $task_record = \app\admin\model\Task::get(['id' => $task_id])->getData();
         $task_code = json_decode($task_record['taskcode'],true);
 
+        // 如果当前时间大于发布时间
         $pubtime = time() > $task_record['pubtime'] ? time() : $task_record['pubtime'];
 
         $task_info['verify_key'] = $task_code[0]['verify_key'];
         $task_info['pubtime'] = date('Y-m-d H:i:s', $pubtime);
         $task_info['endtime'] = date('Y-m-d H:i:s', $task_record['endtime']);
 
-        // 如果当前时间大于发布时间
-
-        $task_info['viewing_duration'] = ($task_record['endtime'] - $pubtime) / 60;
+        $task_info['viewing_duration'] = ($task_record['endtime'] - $pubtime) / 60 > 1 ? floor(($task_record['endtime'] - $pubtime) / 60) : 0;
         $task_info['manually_amount'] = $task_code[0]['manually_amount'];
         $task_info['manually_comment_cnt'] = $task_code[0]['manually_comment_cnt'];
 

@@ -167,6 +167,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 }
             });
         },
+        detail: function () {
+            $('.back-btn').on('click',function () {
+                parent.$('.layui-layer-close').trigger("click");
+            });
+        },
         livepublish: function () {
             $('.clear-task').on('click', function () {
                 var operation_type = $(this).data('operation_type');
@@ -185,8 +190,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                    $('.layer-footer').css({'display':'none'});
-                    console.log($('.layer-footer'));
+                    // $('.layui-layer-footer', window.parent.document)
+                    // $(window.parent.document).find(".layui-layer-footer").remove();
                     top.Toastr.success(ret.msg);
                     parent.$(".btn-refresh").trigger("click");
                     window.location.href = '/task/detail?task_id=' + data + '&type=' + ret.url;
@@ -222,7 +227,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     $('.delay').css({'display': 'none'});
                     $('#c-reward').val(3);
                 }
-            }
+            },
         }
     };
     return Controller;
