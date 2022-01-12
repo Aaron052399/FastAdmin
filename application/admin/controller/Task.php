@@ -423,9 +423,26 @@ class Task extends Backend
         $taskcode['delay'] = explode('.', $params['taskname'])[1] == 'vlog' ? $taskcode['delay'] * 60 : strtotime($params['endtime']) - strtotime($params['pubtime']);
         $taskcode_arr[] = $taskcode;
 
+        foreach ($taskcode_arr[0] as $key => $item) {
+            switch ($key) {
+                case 'follow_mintime':
+                case 'follow_maxtime':
+                case 'manually_follow_cnt':
+                case 'manually_praise_cnt':
+                case 'manually_comment_cnt':
+                case 'manually_cart_cnt':
+                case 'manually_amount':
+                    $taskcode_arr[0][$key] = intval($item);
+                    break;
+                case 'amount_multi':
+                    $taskcode_arr[0][$key] = floatval($item);
+                    break;
+            }
+        }
+
         // 处理剩余字段
         $params['status'] = 1;
-        $params['taskcode'] = json_encode($taskcode_arr,JSON_UNESCAPED_UNICODE+JSON_NUMERIC_CHECK);
+        $params['taskcode'] = json_encode($taskcode_arr,JSON_UNESCAPED_UNICODE);
         $params['tasktype'] = strtoupper($params['tasktype']);
         $params['amount'] = floor($taskcode['manually_amount'] * $taskcode['amount_multi']);
         $params['updatetime'] = time();
